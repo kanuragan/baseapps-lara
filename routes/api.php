@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\LocationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,4 +23,7 @@ Route::post('register', [UserController::class, 'register']);
 
 Route::group(['middleware' => 'auth:api'], function(){
     Route::post('details',[UserController::class, 'details']);
+    Route::get('locations',[LocationController::class, 'getLocations']);
+    Route::get('locations/{location_id}',[LocationController::class, 'getLocationById']);
+    Route::post('locations',[LocationController::class, 'createLocation']);
 });
