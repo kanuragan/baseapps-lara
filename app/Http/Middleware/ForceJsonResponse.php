@@ -29,12 +29,16 @@ class ForceJsonResponse
                                 ->count();
         if($cek_client_apps != 1 ) {
             return response()->json([
-                'response' => 'unauthorized',
+                'statusCode' => 401,
+                'success'    => 0,
+                'message'    => 'unauthorized',
             ], 401);
         }
         if (! $request->expectsJson()) {
             return response()->json([
-                'response' => 'unauthorized',
+                'statusCode' => 401,
+                'success'    => 0,
+                'message'    => 'unauthorized',
             ], 401);
         }
         return $next($request);
