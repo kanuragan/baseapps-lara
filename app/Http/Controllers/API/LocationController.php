@@ -18,14 +18,22 @@ class LocationController extends Controller
                                 ->offset($offset)
                                 ->limit($limit)
                                 ->get();
-        return response()->json(['response' => 'success', 'data'=>$data], $this->successStatus);
+        return response()->json([
+            'statusCode' => 200,
+            'success'    => 1,
+            'data'       => $data,
+        ], 200);
     }
 
     public function getLocationById($location_id) {
         $data = DB::table('locations')
                     ->where('location_id',$location_id)
                     ->get();
-        return response()->json(['response' => 'success', 'data'=>$data], $this->successStatus);
+        return response()->json([
+            'statusCode' => 200,
+            'success'    => 1,
+            'data'       => $data,
+        ], 200);
     }
 
     public function createLocation(Request $request) {
@@ -36,14 +44,26 @@ class LocationController extends Controller
             'lng'           => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json(['response' => 'error' , 'message'=>$validator->errors()], 401);            
+            return response()->json([
+                'statusCode' => 400,
+                'success'    => 0,
+                'message'    => $validator->errors(),
+            ], 400);           
         }
         $input               = $request->all();
         $input['created_at'] = date('Y-m-d H:i');
         $save                = DB::table('locations')->insert($input);
         if($save) {
-            return response()->json(['response'=> 'success', 'message' => 'successfully added data'], $this->successStatus);
+            return response()->json([
+                'statusCode' => 200,
+                'success'    => 1,
+                'message'    => 'successfully added data',
+            ], 200); 
         }
-        return response()->json(['response' => 'error'], 401);
+        return response()->json([
+            'statusCode' => 400,
+            'success'    => 0,
+            'message'    => 'failed',
+        ], 400); 
     }
 }
