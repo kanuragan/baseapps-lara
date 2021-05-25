@@ -2,37 +2,39 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
+use Validator;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Validator;
+use App\Http\Controllers\Controller;
 
 class LocationController extends Controller
 {
     public $successStatus = 200;
 
     public function getLocations() {
-        $limit  = (isset($_GET['limit']) AND !empty($_GET['limit'])) ? $_GET['limit'] : 10;
-        $offset = (isset($_GET['offset']) AND !empty($_GET['offset'])) ? $_GET['offset'] : 0;
-        $data   = DB::table('locations')
-                                ->offset($offset)
-                                ->limit($limit)
-                                ->get();
+        $location = Location::latest()->paginate(10);
         return response()->json([
             'statusCode' => 200,
             'success'    => 1,
-            'data'       => $data,
+            'data'       => $location,
         ], 200);
     }
-
-    public function getLocationById($location_id) {
-        $data = DB::table('locations')
-                    ->where('location_id',$location_id)
-                    ->get();
+    public function getLocationId($lid) {
+        $location = Location::find($lid);
         return response()->json([
             'statusCode' => 200,
             'success'    => 1,
-            'data'       => $data,
+            'data'       => $location,
+        ], 200);
+    }
+	
+	public function getMarker() {
+        $location = Location::all();
+        return response()->json([
+            'statusCode' => 200,
+            'success'    => 1,
+            'data'       => $location,
         ], 200);
     }
 
@@ -65,5 +67,60 @@ class LocationController extends Controller
             'success'    => 0,
             'message'    => 'failed',
         ], 400); 
+    }
+
+    public function updateLocation(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'location_code' => 'required|max:8|unique:locations,location_code,'.$request->location_id. ',location_id',
+            'location_name' => 'required',
+            'lat'           => 'required',
+            'lng'           => 'required',
+        ]);
+ 
+        if ($validator->fails()) {
+            return response()->json([
+                'statusCode' => 401,
+                'success'    => 0,
+                'message'    => $validator->errors(),
+            ], 401);            
+        }
+
+        $locationUpdate = array(
+                'location_code' => $request->location_code,
+                'location_name' => $request->location_name,
+                'lat'           => $request->lat,
+                'lng'           => $request->lng,
+        );
+        $user       = Location::where('location_id',$request->location_id)
+                                ->update($locationUpdate);
+        if($user) {
+            return response()->json([
+                'statusCode' => 200,
+                'success'    => 1,
+                'data'       => 'success update data',
+            ], 200);
+        }
+
+        return response()->json([
+            'statusCode' => 401,
+            'success'    => 0,
+            'message'    => 'failed',
+        ], 401);
+    }
+    public function deleteLocation(Request $request) {
+        $delete = Location::where('location_id',$request->location_id)->delete();
+        if($delete){
+            return response()->json([
+                'statusCode' => 200,
+                'success'    => 1,
+                'message'    => 'successfully delete data',
+            ], 200);
+        } else {
+            return response()->json([
+                'statusCode' => 400,
+                'success'    => 0,
+                'message'    => 'failed delete data',
+            ], 400);
+        }
     }
 }
