@@ -9,6 +9,7 @@ use App\Http\Controllers\API\LocationController;
 use App\Http\Controllers\API\PositionController;
 use App\Http\Controllers\API\ScheduleController;
 use App\Http\Controllers\API\AssignmentController;
+use App\Http\Controllers\API\UserActivityController;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -34,7 +35,9 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('deletelocation',[LocationController::class, 'deleteLocation']);
     //assignment controller
     Route::get('assignment', [AssignmentController::class, 'getAssignment']);
+    Route::get('countassignment/{role}/{uid}', [AssignmentController::class, 'countAssignment']);
     Route::get('assignment/{aid}', [AssignmentController::class, 'getAssignmentId']);
+    Route::get('assignmentview/{aid}', [AssignmentController::class, 'getAssignmentView']);
     Route::post('createassignment', [AssignmentController::class, 'createAssignment']);
     Route::post('updateassignment', [AssignmentController::class, 'updateAssignment']);
     Route::post('deleteassignment', [AssignmentController::class, 'deleteAssignment']);
@@ -48,4 +51,6 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('positions', [PositionController::class, 'positions']);
     //ROLE
     Route::get('roles', [RoleController::class, 'roles']);
+    //USER_ACTIVITY
+    Route::post('activityassignment', [UserActivityController::class, 'createAssignment']);    
 });

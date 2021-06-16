@@ -11,6 +11,10 @@ class Position extends Model
     use HasFactory;
 
     protected $primaryKey = "position_id";
+    protected $casts = [
+        'created_at',
+        'updated_at'
+    ];
 
     public function departement()
     {

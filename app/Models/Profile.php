@@ -17,4 +17,8 @@ class Profile extends Model
         'lat',
         'lng',
     ];
+    protected $casts = [
+        'created_at',
+        'updated_at'
+    ];
 }

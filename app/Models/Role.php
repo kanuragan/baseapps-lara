@@ -9,4 +9,8 @@ class Role extends Model
 {
     use HasFactory;
     protected $primaryKey = "role_id";
+    protected $casts = [
+        'created_at',
+        'updated_at'
+    ];
 }

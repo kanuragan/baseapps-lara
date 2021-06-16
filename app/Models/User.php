@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Validator;
 use App\Models\Role;
 use App\Models\Position;
@@ -50,7 +51,10 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
+
 
     public function findForPassport($identifier) {
         return $this->orWhere('email', $identifier)->orWhere('username', $identifier)->first();

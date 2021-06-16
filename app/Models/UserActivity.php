@@ -1,26 +1,27 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Location extends Model
+class UserActivity extends Model
 {
     use HasFactory;
 
-    protected $table = 'locations';
+    protected $table = 'user_activities';
 
-    protected $primaryKey = 'location_id';
+    protected $primaryKey = 'user_activity_id';
 
     protected $fillable = [
-        'location_code',
-        'lcoation_name',
-        'lat',
-        'lng',
+        'assignment_id',
+        'user_id',
+        'image',
+        'desc',
     ];
 
     protected $casts = [
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 }

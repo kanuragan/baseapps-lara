@@ -17,10 +17,12 @@ class UserController extends Controller
 	public function users()
     {
         $user = User::with('position','role')->latest()->paginate(10);
+        $me   = Auth::user();
         return response()->json([
             'statusCode' => 200,
             'success'    => 1,
             'data'       => $user,
+            'me'         => $me,
         ], 200);
     }
     public function userId($user_id)

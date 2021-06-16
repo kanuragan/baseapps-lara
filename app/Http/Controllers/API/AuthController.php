@@ -51,10 +51,13 @@ class AuthController extends Controller
             ], 401); 
         }
 
+        $user = User::where('username',$request->username)->get()->first();
+
         return response()->json([
                 'statusCode' => 200,
                 'success'    => 1,
                 'data'       => $response->json(),
+                'user'       => $user,
         ], 200);   
         
     }
